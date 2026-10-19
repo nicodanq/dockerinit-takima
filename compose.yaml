@@ -1,0 +1,59 @@
+services:
+  backend:
+    build: ./simpleapi
+    environment:
+      POSTGRES_HOST: database
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    networks:
+      - front-network
+      - back-network
+    depends_on:
+      database:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  database:
+    build: ./postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    networks:
+      - back-network
+    volumes:
+      - db-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  httpd:
+    build: ./httpd
+    ports:
+      - "80:80"
+    networks:
+      - front-network
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      # pas de curl/wget dans l'image httpd : on teste juste que le port 80 répond
+      test: ["CMD", "bash", "-c", "exec 3<>/dev/tcp/127.0.0.1/80"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+networks:
+  front-network:
+  back-network:
+
+volumes:
+  db-postgres:
