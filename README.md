@@ -165,8 +165,6 @@ Images publiées :
 - [nicodnq25/tp01-backend](https://hub.docker.com/r/nicodnq25/tp01-backend)
 - [nicodnq25/tp01-httpd](https://hub.docker.com/r/nicodnq25/tp01-httpd)
 
-Attention : `docker login` sans `sudo` enregistre les identifiants pour l'utilisateur courant. `sudo docker push` utilise ceux de root, donc soit tout faire avec sudo, soit ajouter son utilisateur au groupe `docker`.
-
 ### 1-10 Pourquoi mettre ses images dans un registry en ligne ?
 
 - **Partager** les images avec l'équipe, la CI et les serveurs, sans rebuild sur chaque machine.
