@@ -1,0 +1,46 @@
+name: CD devops 2025
+on:
+  # triggered when the CI workflow finishes
+  workflow_run:
+    workflows: ["CI devops 2025"]
+    types:
+      - completed
+    branches:
+      - main
+
+jobs:
+  build-and-push-docker-image:
+    # run only if test-backend passed, on a push to main (not on a pull request)
+    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push'
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          # build exactly the commit that was tested by the CI
+          ref: ${{ github.event.workflow_run.head_sha }}
+
+      - name: Login to DockerHub
+        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login --username ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+
+      - name: Build image and push backend
+        uses: docker/build-push-action@v6
+        with:
+          context: ./simpleapi
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-simple-api:latest
+          push: true
+
+      - name: Build image and push database
+        uses: docker/build-push-action@v6
+        with:
+          context: ./postgres
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-database:latest
+          push: true
+
+      - name: Build image and push httpd
+        uses: docker/build-push-action@v6
+        with:
+          context: ./httpd
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-httpd:latest
+          push: true
