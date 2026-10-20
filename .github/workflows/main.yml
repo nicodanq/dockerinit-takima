@@ -16,6 +16,7 @@ jobs:
 
      #do the same with another action (actions/setup-java@v4) that enable to setup jdk 21
       - name: Set up JDK 21
+        uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '21'
