@@ -3,8 +3,8 @@ on:
   #to begin you want to launch this job in main and develop
   push:
     branches:
-      -main
-      -development
+      - main
+      - development
   pull_request:
 
 jobs:
@@ -16,11 +16,11 @@ jobs:
 
      #do the same with another action (actions/setup-java@v4) that enable to setup jdk 21
       - name: Set up JDK 21
-          with:
-            distribution: 'temurin'
-            java-version: '21'
-            cache: 'maven'
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: 'maven'
 
      #finally build your app with the latest command
       - name: Build and test with Maven
-        run: mvn clean verify --file ./simple-api/pom.xml
+        run: mvn clean verify --file ./simpleapi/pom.xml
