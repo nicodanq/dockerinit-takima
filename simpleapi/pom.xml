@@ -116,4 +116,19 @@
 		</plugins>
 	</build>
 
+
+<!--
+Source - https://stackoverflow.com/a/71428258
+Posted by Kev
+Retrieved 2026-10-20, License - CC BY-SA 4.0
+-->
+
+	<settings>
+	    <pluginGroups>
+	        <pluginGroup>org.sonarsource.scanner.maven</pluginGroup>
+	    </pluginGroups>
+	</settings>
+
+
+
 </project>
