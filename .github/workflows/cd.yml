@@ -44,3 +44,34 @@ jobs:
           context: ./httpd
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-httpd:latest
           push: true
+
+  deploy:
+    # run only once the new images are on DockerHub
+    needs: build-and-push-docker-image
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          # deploy with the Ansible files of the tested commit
+          ref: ${{ github.event.workflow_run.head_sha }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Ansible
+        run: pip install ansible
+
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan nicolas.danquigny.takima.school >> ~/.ssh/known_hosts
+
+      - name: Deploy with Ansible
+        working-directory: ./ansible
+        run: ansible-playbook -i inventories/setup.yml playbook.yml
