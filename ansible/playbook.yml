@@ -1,0 +1,26 @@
+- hosts: all
+  gather_facts: false
+  become: true
+
+  tasks:
+   - name: Test connection
+     ping:
+
+- hosts: all
+  gather_facts: true
+  become: true
+
+  roles:
+    - docker
+
+- hosts: all
+  gather_facts: false
+  become: true
+  vars:
+    ansible_python_interpreter: /opt/docker_venv/bin/python3
+
+  roles:
+    - create_network
+    - launch_database
+    - launch_app
+    - launch_proxy

@@ -1,0 +1,17 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for roles/launch_app
+
+- name: Run backend
+  community.docker.docker_container:
+    name: backend
+    image: nicodnq25/tp-devops-simple-api:latest
+    pull: true
+    networks:
+      - name: app-network
+    env:
+      # les variables que lit ton application.yml
+      POSTGRES_HOST: database
+      POSTGRES_DB: db
+      POSTGRES_USER: usr
+      POSTGRES_PASSWORD: pwd
