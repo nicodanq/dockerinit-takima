@@ -1,0 +1,15 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for roles/launch_database
+
+- name: Run database
+  community.docker.docker_container:
+    name: database
+    image: nicodnq25/tp-devops-database:latest
+    pull: true
+    networks:
+      - name: app-network
+    env:
+      POSTGRES_DB: db
+      POSTGRES_USER: usr
+      POSTGRES_PASSWORD: pwd

@@ -1,0 +1,13 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for roles/launch_proxy
+
+- name: Run proxy
+  community.docker.docker_container:
+    name: httpd
+    image: nicodnq25/tp-devops-httpd:latest
+    pull: true
+    networks:
+      - name: app-network
+    ports:
+      - "80:80"
