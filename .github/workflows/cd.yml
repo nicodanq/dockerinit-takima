@@ -2,7 +2,7 @@ name: CD devops 2025
 on:
   # triggered when the CI workflow finishes
   workflow_run:
-    workflows: ["CI devops 2025"]
+    workflows: ["CI devops 2026"]
     types:
       - completed
     branches:
@@ -43,6 +43,13 @@ jobs:
         with:
           context: ./httpd
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-httpd:latest
+          push: true
+
+      - name: Build image and push front
+        uses: docker/build-push-action@v6
+        with:
+          context: ./front
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-front:latest
           push: true
 
   deploy:
