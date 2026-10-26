@@ -23,4 +23,5 @@
     - create_network
     - launch_database
     - launch_app
+    - launch_front
     - launch_proxy
