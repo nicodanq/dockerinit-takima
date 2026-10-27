@@ -81,4 +81,7 @@ jobs:
 
       - name: Deploy with Ansible
         working-directory: ./ansible
-        run: ansible-playbook -i inventories/setup.yml playbook.yml
+        run: |
+          echo "${{ secrets.ANSIBLE_VAULT_PASSWORD }}" > ~/.vault_pass
+          chmod 600 ~/.vault_pass
+          ansible-playbook -i inventories/setup.yml playbook.yml --vault-password-file ~/.vault_pass
